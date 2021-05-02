@@ -31,7 +31,7 @@ handler.get((req, res) => {
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
         const { access_token, refresh_token } = body;
-        res.redirect(`/?${querystring.stringify({ access_token, refresh_token})}`);
+        res.redirect(`/?${querystring.stringify({ accessToken: access_token, refreshToken: refresh_token})}`);
       } else {
         res.redirect('/#' +
           querystring.stringify({
