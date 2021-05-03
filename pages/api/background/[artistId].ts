@@ -9,9 +9,7 @@ const SPOTIFY_ARTIST_URL = 'https://open.spotify.com/artist/';
 
 handler.get(async (req, res) => {
   const { artistId }  = req.query;
-  console.log({cache});
   if (cache[artistId as string]) {
-    console.log('cached!');
     return res.json(cache[artistId as string]);
   }
 
@@ -22,7 +20,7 @@ handler.get(async (req, res) => {
     height: 1080
   });
   await page.goto(`${SPOTIFY_ARTIST_URL}${artistId}`);
-  await page.waitForSelector('[data-testid=background-image]', { timeout: 5_000});
+  await page.waitForSelector('[data-testid=background-image]', { timeout: 5_000 });
   const bgUrl = await page.evaluate(() => {
     const res = document.querySelector('[data-testid=background-image]').style.backgroundImage;
     return res;
@@ -30,7 +28,6 @@ handler.get(async (req, res) => {
   await browser.close();
   const retrievedUrl = bgUrl ? JSON.stringify(bgUrl.match(/"([^"]+)"/)[1]) : null;
   cache[artistId as string] = retrievedUrl;
-  console.log(cache);
   res.json(retrievedUrl);
 });
 

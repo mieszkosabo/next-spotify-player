@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import querystring from 'query-string';
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useMachine } from '@xstate/react';
@@ -10,9 +11,11 @@ import { Main } from '../components/layout/Main';
 import { usePalette } from '../hooks/usePalette/usePalette';
 import { IconButton } from '../components/IconButton';
 import { Topbar } from '../components/layout/Topbar';
+import { enableNoSleep } from '../utils/nosleep';
 
 export default function Home(): JSX.Element {
   const router = useRouter();
+  const fullscreen = useFullScreenHandle();
   const [state, send] = useMachine(machine);
   const { context } = state;
   const { data, 
@@ -49,16 +52,18 @@ export default function Home(): JSX.Element {
     send({ type: 'DATA_RECEIVED'});
   }
   return (
-    <div>
+    <FullScreen handle={fullscreen}>
       <Head>
         <title>Clean Spotify Player</title>
         <meta name="description" content="Spotify player with delightful visuals" />
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>"></link>
       </Head>
     <Main backgroundColor={palette.darkMuted} backgroundImg={artistImg} displayMode={context.displayMode}>
-      <Topbar>
+      {!fullscreen.active && <Topbar>
         <IconButton onClick={() => send({ type: 'SWITCH_DISPLAY'})}>hello</IconButton>
+        <IconButton onClick={() => { fullscreen.enter(); enableNoSleep(); }}>fullscreen!</IconButton>
       </Topbar>
+      }
         <PlayerLayout
           playerData={data}
           progressColorFront={palette.vibrant}
@@ -66,6 +71,6 @@ export default function Home(): JSX.Element {
           displayMode={context.displayMode}
         />
     </Main>
-    </div>
+    </FullScreen>
   );
 }

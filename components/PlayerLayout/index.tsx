@@ -49,6 +49,7 @@ export const PlayerLayout = ({ playerData, progressColorFront, progressColorBack
         <Flex flexDirection="column" justifyContent="center" alignItems="center" height="full" padding={8}>
           <Title title={title} mb={8}/>
           <ProgressLine
+            strokeWidth={1}
             percent={(progress / duration * 100)}
             colorFront={progressColorFront}
             colorBack={progressColorBack}  
@@ -71,6 +72,7 @@ export const PlayerLayout = ({ playerData, progressColorFront, progressColorBack
         </Areas.SmallTitles>
         <Areas.Progress>
         <ProgressLine
+            strokeWidth={0.5}
             percent={(progress / duration * 100)}
             colorFront={progressColorFront}
             colorBack={progressColorBack}
