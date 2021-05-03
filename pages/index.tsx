@@ -5,6 +5,9 @@ import { useEffect } from 'react';
 import { useMachine } from '@xstate/react';
 import { machine } from '../machines';
 import { useSpotifyData } from '../hooks/useSpotifyData';
+import { PlayerLayout } from '../components/PlayerLayout';
+import { Main } from '../components/layout/Main';
+import { usePalette } from '../hooks/usePalette/usePalette';
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -13,7 +16,9 @@ export default function Home(): JSX.Element {
   const { data, 
           isError,
           isNotPlaying, 
-          artistImg } = useSpotifyData(context.accessToken);
+          } = useSpotifyData(context.accessToken);
+  
+  const { data: palette } = usePalette(data.albumCover);
   useEffect(() => {
     const { query } = querystring.parseUrl(window.location.href);
     const { accessToken, refreshToken } = query;
@@ -47,11 +52,17 @@ export default function Home(): JSX.Element {
         <meta name="description" content="Spotify player with delightful visuals" />
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>"></link>
       </Head>
-    <main>
-      <h1>{state.value}</h1>
-      <pre>{JSON.stringify(data)}</pre>
-      <img src={artistImg} alt="cover" />
-    </main>
+    <Main backgroundColor={palette.darkMuted}>
+      <PlayerLayout 
+        title={data.title}
+        artist={data.artist}
+        albumSrc={data.albumCover}
+        progress={data.progress}
+        duration={data.duration}
+        progressColorFront={palette.vibrant}
+        progressColorBack={palette.darkVibrant}
+      />
+    </Main>
     </div>
   );
 }

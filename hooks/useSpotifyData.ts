@@ -6,6 +6,7 @@ interface Options {
 }
 
 const parseData = (data: any) => ({
+  title: data?.data?.item?.name,
   artist: data?.data?.item?.artists[0]?.name,
   duration: data?.data?.item?.duration_ms,
   progress: data?.data?.progress_ms,

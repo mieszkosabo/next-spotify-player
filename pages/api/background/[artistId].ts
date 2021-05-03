@@ -22,8 +22,7 @@ handler.get(async (req, res) => {
     height: 1080
   });
   await page.goto(`${SPOTIFY_ARTIST_URL}${artistId}`);
-  await page.waitForSelector('[data-testid=background-image]', { timeout: 5000});
-  await page.screenshot({ path: 'example.png' });
+  await page.waitForSelector('[data-testid=background-image]', { timeout: 5_000});
   const bgUrl = await page.evaluate(() => {
     const res = document.querySelector('[data-testid=background-image]').style.backgroundImage;
     return res;
