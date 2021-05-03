@@ -11,7 +11,6 @@ export const Album = ({ src, ...props }: Props) => (
     src={src}
     alt="album cover"
     boxShadow="canvas"
-    width="90%"
     {...props}
   />
 );

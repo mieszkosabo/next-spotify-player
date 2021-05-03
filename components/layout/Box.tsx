@@ -1,6 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import { style, ResponsiveValue, space, layout, position, SpaceProps, LayoutProps, PositionProps, border, BorderProps, compose, shadow, ShadowProps } from 'styled-system';
+import { style, 
+         ResponsiveValue,
+         space,
+         layout,
+         position,
+         SpaceProps,
+         LayoutProps,
+         PositionProps,
+         border,
+         BorderProps,
+         compose,
+         shadow,
+         ShadowProps,
+         background,
+         BackgroundProps } from 'styled-system';
 
 const textColor = style({
   prop: 'textColor',
@@ -13,7 +27,7 @@ const backgroundColor = style({
   cssProperty: 'background-color',
   key: 'colors'
 });
-export interface BoxProps extends LayoutProps, PositionProps, SpaceProps, BorderProps, ShadowProps {
+export interface BoxProps extends LayoutProps, PositionProps, SpaceProps, BorderProps, ShadowProps, BackgroundProps {
   children?: React.ReactNode;
   textColor?: ResponsiveValue<string>; 
   bg?: ResponsiveValue<string>;
@@ -29,6 +43,7 @@ export const Box = styled.div<BoxProps>`
   layout,
   position,
   border,
-  shadow
+  shadow,
+  background
 )}
 `;

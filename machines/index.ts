@@ -13,18 +13,24 @@ type Events =
   | { type: 'TOKEN_UPDATE', accessToken: string, refreshToken: string }
   | { type: 'DATA_RECEIVED' }
   | { type: 'NO_DATA' }
-  | { type: 'AUTH_ERROR' };
+  | { type: 'AUTH_ERROR' }
+  | { type: 'SWITCH_DISPLAY'};
 
+export type DISPLAY_MODE = 
+  | 'STANDARD'
+  | 'BACKGROUND'
 interface Context {
   accessToken: string;
   refreshToken: string;
+  displayMode: DISPLAY_MODE;
 }
 
 export const machine = Machine<Context, Schema, Events>({
   initial: 'noAuth',
   context: {
     accessToken: null,
-    refreshToken: null
+    refreshToken: null,
+    displayMode: 'STANDARD'
   },
   states: {
     'noAuth': {
@@ -47,13 +53,26 @@ export const machine = Machine<Context, Schema, Events>({
     playing: {
       on: {
         'NO_DATA': 'notPlaying',
-        'AUTH_ERROR': 'noAuth'
+        'AUTH_ERROR': {
+          actions: () => {
+            window.location.assign('/');
+          }
+        },
+        'SWITCH_DISPLAY': {
+          actions: assign({
+            displayMode: (context) => context.displayMode === 'STANDARD' ? 'BACKGROUND' : 'STANDARD'
+          })
+        }
       }
     },
     notPlaying: {
       on: {
         'DATA_RECEIVED': 'playing',
-        'AUTH_ERROR': 'noAuth'
+        'AUTH_ERROR': {
+          actions: () => {
+            window.location.assign('/');
+          }
+        }
       }
     }
   }
