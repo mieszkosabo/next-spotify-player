@@ -4,9 +4,9 @@ import { DISPLAY_MODE } from '../../machines';
 import { Box } from './Box';
 
 interface Props {
-  displayMode: DISPLAY_MODE;
-  backgroundColor: string;
-  backgroundImg: string;
+  displayMode?: DISPLAY_MODE;
+  backgroundColor?: string;
+  backgroundImg?: string;
   children: React.ReactNode;
 }
 

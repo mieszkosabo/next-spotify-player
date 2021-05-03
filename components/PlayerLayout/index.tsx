@@ -29,7 +29,7 @@ interface Props {
 }
 
 export const PlayerLayout = ({ playerData, progressColorFront, progressColorBack, displayMode }: Props) => {
-  const { albumSrc, title, artist, progress, duration } = playerData;
+  const { albumSrc, title, artist, progress, duration, paused } = playerData;
   return (
     <Composition
       height="100%"
@@ -42,7 +42,7 @@ export const PlayerLayout = ({ playerData, progressColorFront, progressColorBack
         <>
         <Areas.Album>
         <Flex justifyContent="flex-end" alignItems="center" height="full">
-          <Album width="90%" src={albumSrc} />
+          <Album width="90%" pt="90%" src={albumSrc} />
         </Flex>
         </Areas.Album>
         <Areas.Titles>
@@ -50,7 +50,9 @@ export const PlayerLayout = ({ playerData, progressColorFront, progressColorBack
           <Title title={title} mb={8}/>
           <ProgressLine
             strokeWidth={1}
-            percent={(progress / duration * 100)}
+            progress={progress}
+            duration={duration}
+            paused={paused}
             colorFront={progressColorFront}
             colorBack={progressColorBack}  
             width="70%"
@@ -61,7 +63,7 @@ export const PlayerLayout = ({ playerData, progressColorFront, progressColorBack
 
         <Areas.SmallAlbum>
           <Flex flexDirection="column" justifyContent="flex-end" height="full" pl={8}>
-            <Album width={80} src={albumSrc} />
+            <Album width={80} height={80} src={albumSrc} />
           </Flex>
         </Areas.SmallAlbum>
         <Areas.SmallTitles>
@@ -73,7 +75,9 @@ export const PlayerLayout = ({ playerData, progressColorFront, progressColorBack
         <Areas.Progress>
         <ProgressLine
             strokeWidth={0.5}
-            percent={(progress / duration * 100)}
+            progress={progress}
+            duration={duration}
+            paused={paused}
             colorFront={progressColorFront}
             colorBack={progressColorBack}
             px={8}

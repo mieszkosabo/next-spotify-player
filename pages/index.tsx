@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import querystring from 'query-string';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { useRouter } from 'next/router';
@@ -22,8 +21,7 @@ export default function Home(): JSX.Element {
           isError,
           isNotPlaying,
           artistImg
-          } = useSpotifyData(context.accessToken);
-  
+  } = useSpotifyData(context.accessToken);
   const { data: palette } = usePalette(data.albumSrc);
   useEffect(() => {
     const { query } = querystring.parseUrl(window.location.href);
@@ -51,13 +49,15 @@ export default function Home(): JSX.Element {
   else {
     send({ type: 'DATA_RECEIVED'});
   }
+  if (state.value === 'loading' || state.value === 'noAuth') {
+    return (
+    <Main>
+      <p>loading...</p>
+    </Main>
+    );
+  }
   return (
     <FullScreen handle={fullscreen}>
-      <Head>
-        <title>Clean Spotify Player</title>
-        <meta name="description" content="Spotify player with delightful visuals" />
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>"></link>
-      </Head>
     <Main backgroundColor={palette.darkMuted} backgroundImg={artistImg} displayMode={context.displayMode}>
       {!fullscreen.active && <Topbar>
         <IconButton onClick={() => send({ type: 'SWITCH_DISPLAY'})}>hello</IconButton>
