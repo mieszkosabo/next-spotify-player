@@ -11,6 +11,11 @@ import { usePalette } from '../hooks/usePalette/usePalette';
 import { IconButton } from '../components/IconButton';
 import { Topbar } from '../components/layout/Topbar';
 import { enableNoSleep } from '../utils/nosleep';
+import { FullscreenIcon } from '../components/Icons/FullscreenIcon';
+import { SwitchDisplay } from '../components/Icons/SwitchIcon';
+import { Palette } from '../components/Icons/PaletteIcon';
+import { Flex } from '../components/layout/Flex';
+import { Text } from '../components/layout/Text';
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -44,7 +49,6 @@ export default function Home(): JSX.Element {
   
   if (isNotPlaying) {
     send({ type: 'NO_DATA'});
-
   }
   else {
     send({ type: 'DATA_RECEIVED'});
@@ -52,22 +56,38 @@ export default function Home(): JSX.Element {
   if (state.value === 'loading' || state.value === 'noAuth') {
     return (
     <Main>
-      <p>loading...</p>
+      <Flex justifyContent="center" alignItems="center" width="full" height="full">
+        <Text fontSize="3rem" fontWeight="bold" color="white">Loading...</Text>
+      </Flex>
     </Main>
     );
   }
+  if (state.value === 'notPlaying') {
+    return (
+      <Main>
+        <Flex justifyContent="center" alignItems="center" width="full" height="full">
+          <Text fontSize="3rem" fontWeight="bold" color="white">Play something!</Text>
+        </Flex>
+      </Main>
+      ); 
+  }
   return (
     <FullScreen handle={fullscreen}>
-    <Main backgroundColor={palette.darkMuted} backgroundImg={artistImg} displayMode={context.displayMode}>
+    <Main 
+      backgroundColor={context.paletteMode === 'VIBRANT' ? palette.darkVibrant : palette.darkMuted}
+      backgroundImg={artistImg}
+      displayMode={context.displayMode}
+    >
       {!fullscreen.active && <Topbar>
-        <IconButton onClick={() => send({ type: 'SWITCH_DISPLAY'})}>hello</IconButton>
-        <IconButton onClick={() => { fullscreen.enter(); enableNoSleep(); }}>fullscreen!</IconButton>
+        <IconButton onClick={() => send({ type: 'SWITCH_DISPLAY'})} icon={SwitchDisplay} />
+        <IconButton onClick={() => send({ type: 'SWITCH_PALETTE'})} icon={Palette} />
+        <IconButton onClick={() => { fullscreen.enter(); enableNoSleep(); }} icon={FullscreenIcon} />
       </Topbar>
       }
         <PlayerLayout
           playerData={data}
           progressColorFront={palette.vibrant}
-          progressColorBack={palette.darkVibrant}
+          progressColorBack={context.paletteMode === 'VIBRANT' ? palette.darkMuted : palette.darkVibrant}
           displayMode={context.displayMode}
         />
     </Main>

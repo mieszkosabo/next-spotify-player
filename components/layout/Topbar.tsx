@@ -8,4 +8,6 @@ export const Topbar = styled.nav`
     height: 2rem;
     display: flex;
     justify-content: flex-end;
+    padding-top: 0.5rem;
+    padding-right: 0.5rem;
 `;

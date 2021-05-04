@@ -13,9 +13,7 @@ export type PaletteColors = {
 };
 
 export async function getPalette(src: string) {
-  console.log('elo', src);
   if (!src) {
-    console.log('yo tutaj?');
     return {};
   }
   const palette = await Vibrant.from(src).getPalette();

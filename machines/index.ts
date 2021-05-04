@@ -14,15 +14,21 @@ type Events =
   | { type: 'DATA_RECEIVED' }
   | { type: 'NO_DATA' }
   | { type: 'AUTH_ERROR' }
-  | { type: 'SWITCH_DISPLAY'};
+  | { type: 'SWITCH_DISPLAY'}
+  | { type: 'SWITCH_PALETTE'};
 
 export type DISPLAY_MODE = 
   | 'STANDARD'
   | 'BACKGROUND'
+
+export type PALETTE_MODE =
+  | 'STANDARD'
+  | 'VIBRANT'
 interface Context {
   accessToken: string;
   refreshToken: string;
   displayMode: DISPLAY_MODE;
+  paletteMode: PALETTE_MODE;
 }
 
 export const machine = Machine<Context, Schema, Events>({
@@ -30,7 +36,8 @@ export const machine = Machine<Context, Schema, Events>({
   context: {
     accessToken: null,
     refreshToken: null,
-    displayMode: 'STANDARD'
+    displayMode: 'STANDARD',
+    paletteMode: 'STANDARD'
   },
   states: {
     'noAuth': {
@@ -61,6 +68,11 @@ export const machine = Machine<Context, Schema, Events>({
         'SWITCH_DISPLAY': {
           actions: assign({
             displayMode: (context) => context.displayMode === 'STANDARD' ? 'BACKGROUND' : 'STANDARD'
+          })
+        },
+        'SWITCH_PALETTE': {
+          actions: assign({
+            paletteMode: (context) => context.paletteMode === 'STANDARD' ? 'VIBRANT' : 'STANDARD'
           })
         }
       }

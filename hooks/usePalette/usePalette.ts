@@ -25,12 +25,10 @@ function reducer(state: PaletteState, action): PaletteState {
 }
 
 export const usePalette = (src: string) => {
-  console.log(src);
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     if (!src) {
-      console.log('jestem');
       return;
     }
     dispatch({ type: "getPalette" });

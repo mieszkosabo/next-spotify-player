@@ -32,7 +32,8 @@ export const Album = ({ src, ...props }: Props) => {
   >
     <AnimatePresence>
           <A src={context.backAlbum} />
-          {state.value === 'front' && <A
+          {state.value === 'front' && 
+          <A
             key="elo1"
             initial={{opacity: 0}}
             animate={{ opacity: 1}}

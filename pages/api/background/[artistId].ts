@@ -14,21 +14,26 @@ handler.get(async (req, res) => {
   }
 
   const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setViewport({
-    width: 1920,
-    height: 1080
-  });
-  await page.goto(`${SPOTIFY_ARTIST_URL}${artistId}`);
-  await page.waitForSelector('[data-testid=background-image]', { timeout: 5_000 });
-  const bgUrl = await page.evaluate(() => {
-    const res = document.querySelector('[data-testid=background-image]').style.backgroundImage;
-    return res;
-  });
-  await browser.close();
-  const retrievedUrl = bgUrl ? JSON.stringify(bgUrl.match(/"([^"]+)"/)[1]) : null;
-  cache[artistId as string] = retrievedUrl;
-  res.json(retrievedUrl);
+  try {
+    const page = await browser.newPage();
+    await page.setViewport({
+      width: 1920,
+      height: 1080
+    });
+    await page.goto(`${SPOTIFY_ARTIST_URL}${artistId}`);
+    await page.waitForSelector('[data-testid=background-image]', { timeout: 10_000 });
+    const bgUrl = await page.evaluate(() => {
+      const res = document.querySelector('[data-testid=background-image]').style.backgroundImage;
+      return res;
+    });
+    const retrievedUrl = bgUrl ? JSON.stringify(bgUrl.match(/"([^"]+)"/)[1]) : null;
+    cache[artistId as string] = retrievedUrl;
+    res.json(retrievedUrl);
+  } catch (error) {
+    res.json(null);
+  } finally {
+    await browser.close();
+  }
 });
 
 export default handler;
