@@ -23,7 +23,7 @@ handler.get(async (req, res) => {
     await page.goto(`${SPOTIFY_ARTIST_URL}${artistId}`);
     await page.waitForSelector('[data-testid=background-image]', { timeout: 10_000 });
     const bgUrl = await page.evaluate(() => {
-      const res = document.querySelector('[data-testid=background-image]').style.backgroundImage;
+      const res = (document.querySelector('[data-testid=background-image]') as any)?.style?.backgroundImage;
       return res;
     });
     const retrievedUrl = bgUrl ? JSON.stringify(bgUrl.match(/"([^"]+)"/)[1]) : null;

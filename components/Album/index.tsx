@@ -7,7 +7,9 @@ import { Box } from '../layout/Box';
 
 interface Props {
   src: string;
-  width: string | number;
+  width?: string | number;
+  height?: string | number;
+  pt?: string | number;
 }
 
 const A = styled(motion.img)`
