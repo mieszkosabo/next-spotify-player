@@ -12,6 +12,7 @@ export const Artist = ({ name, ...props}: Props) => (
       fontSize="artist" 
       color="text.artist" 
       letterSpacing="artist" 
+      textAlign="center"
       {...props}
     >
       {name}

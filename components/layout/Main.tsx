@@ -21,7 +21,7 @@ export const Main = ({ backgroundColor, backgroundImg, children, displayMode }: 
     bg={backgroundColor ?? 'background'}
     backgroundImage={displayMode == 'BACKGROUND' ? `url(${backgroundImg})` : 'unset'}
     backgroundSize="cover"
-    boxShadow={displayMode === 'BACKGROUND' ? "inset 0 -12rem 10rem black" : 'unset'}
+    boxShadow={displayMode === 'BACKGROUND' ? "inset 0 -9rem 10rem black" : 'unset'}
   >
     { children }
   </WithColorTransitions>

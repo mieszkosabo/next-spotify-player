@@ -68,8 +68,8 @@ export const PlayerLayout = ({ playerData, progressColorFront, progressColorBack
         </Areas.SmallAlbum>
         <Areas.SmallTitles>
         <Flex height="full" justifyContent="flex-end" flexDirection="column" pl={8}>
-          <Title title={title} m={0} fontSize="3rem" textAlign="left"/>
-          <Artist name={artist} m={0} fontSize="2rem" textAlign="left" color="white"/> 
+          <Title title={title} m={0} fontSize="2rem" textAlign="left"/>
+          <Artist name={artist} m={0} fontSize="1.3rem" textAlign="left" color="white"/> 
         </Flex>
         </Areas.SmallTitles>
         <Areas.Progress>

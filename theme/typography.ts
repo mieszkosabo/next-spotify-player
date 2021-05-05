@@ -32,8 +32,8 @@ export interface FontSizes {
     body: string
 }
 export const fontSizes: FontSizes = {
-    title: '3.5rem',
-    artist: '2.9rem',
+    title: '7vh',
+    artist: '5.5vh',
     body: '1rem'
 };
 
