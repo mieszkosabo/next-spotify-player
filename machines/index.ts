@@ -45,8 +45,8 @@ export const machine = Machine<Context, Schema, Events>({
         'TOKEN_UPDATE': {
           target: 'loading',
           actions: assign((context, event) => ({
-            accessToken: event.accessToken,
-            refreshToken: event.refreshToken
+            accessToken: event.accessToken ?? context.accessToken,
+            refreshToken: event.refreshToken ?? context.refreshToken
           }))
         }
       }

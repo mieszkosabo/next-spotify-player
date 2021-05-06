@@ -16,6 +16,7 @@ import { SwitchDisplay } from '../components/Icons/SwitchIcon';
 import { Palette } from '../components/Icons/PaletteIcon';
 import { Flex } from '../components/layout/Flex';
 import { Text } from '../components/layout/Text';
+import useSWR from 'swr';
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -27,6 +28,13 @@ export default function Home(): JSX.Element {
           isNotPlaying,
           artistImg
   } = useSpotifyData(context.accessToken);
+  const { data: tokens } = useSWR(context.refreshToken ? `/api/refresh_token/${context.refreshToken}` : null, { refreshInterval: 108_000_000}); // refresh token every 30 mins
+  useEffect(() => {
+    if (!tokens) {
+      return;
+    }
+    send({ type: 'TOKEN_UPDATE', accessToken: tokens.access_token, refreshToken: tokens.refresh_token});
+  }, [tokens]);
   const { data: palette } = usePalette(data.albumSrc);
   useEffect(() => {
     const { query } = querystring.parseUrl(window.location.href);
