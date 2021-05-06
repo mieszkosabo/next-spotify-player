@@ -5,25 +5,13 @@ import { NextApiResponse, NextApiRequest } from "next";
 
 const handler = nc<NextApiRequest, NextApiResponse>();
 
-const generateRandomString = (length: number) => {
-  let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-};
-
 handler.get((req, res) => {
-  const state = generateRandomString(16);
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
-      response_type: 'code',
+      response_type: 'token',
       client_id: CLIENT_ID,
       scope: SCOPES.join(' '),
-      redirect_uri: REDIRECT_URI,
-      state: state
+      redirect_uri: REDIRECT_URI
     }));
 });
 

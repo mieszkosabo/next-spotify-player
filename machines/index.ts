@@ -2,6 +2,7 @@ import { assign, Machine } from 'xstate';
 
 interface Schema {
   states: {
+    fatalError: Record<string, unknown>;
     noAuth: Record<string, unknown>;
     loading: Record<string, unknown>;
     playing: Record<string, unknown>;
@@ -10,12 +11,13 @@ interface Schema {
 }
 
 type Events =
-  | { type: 'TOKEN_UPDATE', accessToken: string, refreshToken: string }
+  | { type: 'TOKEN_UPDATE', accessToken: string }
   | { type: 'DATA_RECEIVED' }
   | { type: 'NO_DATA' }
-  | { type: 'AUTH_ERROR' }
+  | { type: 'TOKEN_EXPIRED' }
   | { type: 'SWITCH_DISPLAY'}
-  | { type: 'SWITCH_PALETTE'};
+  | { type: 'SWITCH_PALETTE'}
+  | { type: 'AUTH_ERROR'};
 
 export type DISPLAY_MODE = 
   | 'STANDARD'
@@ -26,7 +28,6 @@ export type PALETTE_MODE =
   | 'VIBRANT'
 interface Context {
   accessToken: string;
-  refreshToken: string;
   displayMode: DISPLAY_MODE;
   paletteMode: PALETTE_MODE;
 }
@@ -35,7 +36,6 @@ export const machine = Machine<Context, Schema, Events>({
   initial: 'noAuth',
   context: {
     accessToken: null,
-    refreshToken: null,
     displayMode: 'STANDARD',
     paletteMode: 'STANDARD'
   },
@@ -45,8 +45,7 @@ export const machine = Machine<Context, Schema, Events>({
         'TOKEN_UPDATE': {
           target: 'loading',
           actions: assign((context, event) => ({
-            accessToken: event.accessToken,
-            refreshToken: event.refreshToken
+            accessToken: event.accessToken
           }))
         }
       }
@@ -60,7 +59,7 @@ export const machine = Machine<Context, Schema, Events>({
     playing: {
       on: {
         'NO_DATA': 'notPlaying',
-        'AUTH_ERROR': {
+        'TOKEN_EXPIRED': {
           actions: () => {
             window.location.assign('/');
           }
@@ -80,12 +79,13 @@ export const machine = Machine<Context, Schema, Events>({
     notPlaying: {
       on: {
         'DATA_RECEIVED': 'playing',
-        'AUTH_ERROR': {
+        'TOKEN_EXPIRED': {
           actions: () => {
             window.location.assign('/');
           }
         }
       }
-    }
+    },
+    fatalError: {}
   }
 });

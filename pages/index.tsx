@@ -29,22 +29,26 @@ export default function Home(): JSX.Element {
   } = useSpotifyData(context.accessToken);
   const { data: palette } = usePalette(data.albumSrc);
   useEffect(() => {
-    const { query } = querystring.parseUrl(window.location.href);
-    const { accessToken, refreshToken } = query;
-    if (accessToken == null || refreshToken == null) {
+    if (state.value === 'fatalError') {
+      return; // don't retry obtaining a token at this point
+    }
+    const { access_token: accessToken, error } = querystring.parse(window.location.hash);
+    if (error) {
+      send({ type: 'AUTH_ERROR' });
+    }
+    if (accessToken == null) {
       router.push('/api/login');
     }
     else {
       send({
         type: 'TOKEN_UPDATE', 
-        accessToken: accessToken as string,
-        refreshToken: refreshToken as string
+        accessToken: accessToken as string
       });
     }
   }, [state.value]);
 
   if (isError) {
-    send({ type: 'AUTH_ERROR'});
+    send({ type: 'TOKEN_EXPIRED'});
   }
   
   if (isNotPlaying) {
