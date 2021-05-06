@@ -1,5 +1,5 @@
 import querystring from 'query-string';
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { useFullScreenHandle } from "react-full-screen";
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useMachine } from '@xstate/react';
@@ -53,30 +53,23 @@ export default function Home(): JSX.Element {
   else {
     send({ type: 'DATA_RECEIVED'});
   }
-  if (state.value === 'loading' || state.value === 'noAuth') {
+  if (state.value === 'loading' || state.value === 'noAuth' || state.value === 'notPlaying') {
     return (
-    <Main>
+    <Main fullScreenHandle={fullscreen}>
       <Flex justifyContent="center" alignItems="center" width="full" height="full">
-        <Text fontSize="3rem" fontWeight="bold" color="white">Loading...</Text>
+        <Text fontSize="3rem" fontWeight="bold" color="white">
+          {state.value === 'notPlaying' ? "Play something" : "Loading..."}
+        </Text>
       </Flex>
     </Main>
     );
   }
-  if (state.value === 'notPlaying') {
-    return (
-      <Main>
-        <Flex justifyContent="center" alignItems="center" width="full" height="full">
-          <Text fontSize="3rem" fontWeight="bold" color="white">Play something!</Text>
-        </Flex>
-      </Main>
-      ); 
-  }
   return (
-    <FullScreen handle={fullscreen}>
     <Main 
       backgroundColor={context.paletteMode === 'VIBRANT' ? palette.darkVibrant : palette.darkMuted}
       backgroundImg={artistImg}
       displayMode={context.displayMode}
+      fullScreenHandle={fullscreen}
     >
       {!fullscreen.active && <Topbar>
         <IconButton onClick={() => send({ type: 'SWITCH_DISPLAY'})} icon={SwitchDisplay} />
@@ -91,6 +84,5 @@ export default function Home(): JSX.Element {
           displayMode={context.displayMode}
         />
     </Main>
-    </FullScreen>
   );
 }
