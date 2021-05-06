@@ -1,5 +1,5 @@
 import querystring from 'query-string';
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { useFullScreenHandle } from "react-full-screen";
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useMachine } from '@xstate/react';
@@ -16,6 +16,7 @@ import { SwitchDisplay } from '../components/Icons/SwitchIcon';
 import { Palette } from '../components/Icons/PaletteIcon';
 import { Flex } from '../components/layout/Flex';
 import { Text } from '../components/layout/Text';
+import useSWR from 'swr';
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -27,6 +28,13 @@ export default function Home(): JSX.Element {
           isNotPlaying,
           artistImg
   } = useSpotifyData(context.accessToken);
+  const { data: tokens } = useSWR(context.refreshToken ? `/api/refresh_token/${context.refreshToken}` : null, { refreshInterval: 108_000_000}); // refresh token every 30 mins
+  useEffect(() => {
+    if (!tokens) {
+      return;
+    }
+    send({ type: 'TOKEN_UPDATE', accessToken: tokens.access_token, refreshToken: tokens.refresh_token});
+  }, [tokens]);
   const { data: palette } = usePalette(data.albumSrc);
   useEffect(() => {
     const { query } = querystring.parseUrl(window.location.href);
@@ -53,30 +61,23 @@ export default function Home(): JSX.Element {
   else {
     send({ type: 'DATA_RECEIVED'});
   }
-  if (state.value === 'loading' || state.value === 'noAuth') {
+  if (state.value === 'loading' || state.value === 'noAuth' || state.value === 'notPlaying') {
     return (
-    <Main>
+    <Main fullScreenHandle={fullscreen}>
       <Flex justifyContent="center" alignItems="center" width="full" height="full">
-        <Text fontSize="3rem" fontWeight="bold" color="white">Loading...</Text>
+        <Text fontSize="3rem" fontWeight="bold" color="white">
+          {state.value === 'notPlaying' ? "Play something" : "Loading..."}
+        </Text>
       </Flex>
     </Main>
     );
   }
-  if (state.value === 'notPlaying') {
-    return (
-      <Main>
-        <Flex justifyContent="center" alignItems="center" width="full" height="full">
-          <Text fontSize="3rem" fontWeight="bold" color="white">Play something!</Text>
-        </Flex>
-      </Main>
-      ); 
-  }
   return (
-    <FullScreen handle={fullscreen}>
     <Main 
       backgroundColor={context.paletteMode === 'VIBRANT' ? palette.darkVibrant : palette.darkMuted}
       backgroundImg={artistImg}
       displayMode={context.displayMode}
+      fullScreenHandle={fullscreen}
     >
       {!fullscreen.active && <Topbar>
         <IconButton onClick={() => send({ type: 'SWITCH_DISPLAY'})} icon={SwitchDisplay} />
@@ -91,6 +92,5 @@ export default function Home(): JSX.Element {
           displayMode={context.displayMode}
         />
     </Main>
-    </FullScreen>
   );
 }
