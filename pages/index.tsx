@@ -28,7 +28,7 @@ export default function Home(): JSX.Element {
           isNotPlaying,
           artistImg
   } = useSpotifyData(context.accessToken);
-  const { data: tokens } = useSWR(context.refreshToken ? `/api/refresh_token/${context.refreshToken}` : null, { refreshInterval: 108_000_000}); // refresh token every 30 mins
+  const { data: tokens } = useSWR(context.refreshToken ? `/api/refresh_token/${context.refreshToken}` : null, { refreshInterval: 1000 * 60 * 30}); // refresh token every 30 mins
   useEffect(() => {
     if (!tokens) {
       return;
