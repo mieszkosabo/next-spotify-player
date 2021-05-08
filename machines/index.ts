@@ -65,6 +65,12 @@ export const machine = Machine<Context, Schema, Events>({
             window.location.assign('/');
           }
         },
+        'TOKEN_UPDATE': {
+          actions: assign((context, event) => ({
+            accessToken: event.accessToken ?? context.accessToken,
+            refreshToken: event.refreshToken ?? context.refreshToken
+          }))
+        },
         'SWITCH_DISPLAY': {
           actions: assign({
             displayMode: (context) => context.displayMode === 'STANDARD' ? 'BACKGROUND' : 'STANDARD'
@@ -84,6 +90,12 @@ export const machine = Machine<Context, Schema, Events>({
           actions: () => {
             window.location.assign('/');
           }
+        },
+        'TOKEN_UPDATE': {
+          actions: assign((context, event) => ({
+            accessToken: event.accessToken ?? context.accessToken,
+            refreshToken: event.refreshToken ?? context.refreshToken
+          }))
         }
       }
     }

@@ -8,6 +8,7 @@
     "start": "next start -p 4000"
   },
   "dependencies": {
+    "@xstate/inspect": "^0.4.1",
     "@xstate/react": "^1.3.3",
     "atomic-layout": "^0.16.2",
     "axios": "^0.21.1",

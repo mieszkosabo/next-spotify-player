@@ -37,7 +37,7 @@ export default function Home(): JSX.Element {
   }, [tokens]);
   const { data: palette } = usePalette(data.albumSrc);
   useEffect(() => {
-    if (!!context.accessToken && !!context.refreshToken) {
+    if (state.value !== 'noAuth') {
       return;
     }
     const { query } = querystring.parseUrl(window.location.href);
