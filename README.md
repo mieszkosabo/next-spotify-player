@@ -15,7 +15,7 @@ Apart from being rewritten from scrach with different tech stack, the player has
 - useSWR for data fetching
 - styled-components, styled-system and atomic-layout for the layout
 - node-vibrant for sampling color palettes
-
+## Examples
 ![](./demo/ghostsnstuff.jpeg)
 ![](./demo/5173.jpeg)
 ![](./demo/wasted.jpeg)
