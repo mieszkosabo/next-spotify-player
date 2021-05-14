@@ -28,8 +28,8 @@ handler.get(async (req, res) => {
   }
   try {
     const browser = await puppeteerPool.acquire();
+    const page = await browser.newPage();
     try {
-      const page = await browser.newPage();
       await page.setViewport({
         width: 1920,
         height: 1080
@@ -46,6 +46,7 @@ handler.get(async (req, res) => {
     } catch (error) {
       res.json(null);
     } finally {
+      await page.close();
       await puppeteerPool.release(browser);
     }
   } catch (_) {
