@@ -2,12 +2,8 @@ import nc from 'next-connect';
 import { NextApiResponse, NextApiRequest } from "next";
 import genericPool from 'generic-pool';
 import puppeteer, { Browser } from 'puppeteer';
-import { promisify } from "util";
-import redis from 'redis';
 
-const cache = redis.createClient();
-const getAsync = promisify(cache.get).bind(cache);
-const setAsync = promisify(cache.set).bind(cache);
+const cache = {};
 
 const factory = {
   create: () => puppeteer.launch(),
@@ -22,7 +18,7 @@ const SPOTIFY_ARTIST_URL = 'https://open.spotify.com/artist/';
 
 handler.get(async (req, res) => {
   const { artistId }  = req.query;
-  const redisResult = await getAsync(artistId);
+  const redisResult = cache[artistId as string];
   if (redisResult != null) {
     return res.json(redisResult);
   }
@@ -41,7 +37,7 @@ handler.get(async (req, res) => {
         return res;
       });
       const retrievedUrl = bgUrl ? JSON.stringify(bgUrl.match(/"([^"]+)"/)[1]) : null;
-      await setAsync(artistId, retrievedUrl);
+      cache[artistId as string] = retrievedUrl;
       res.json(retrievedUrl);
     } catch (error) {
       res.json(null);
