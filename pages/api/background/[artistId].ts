@@ -10,7 +10,10 @@ const createImageApiUrl = (artistId: string) => (
 
 handler.get(async (req, res) => {
   const { artistId }  = req.query;
-  request.get({ uri: 'http://localhost:4000/api/bgImageToken', json: true }, (error, response, body) => {
+  request.get({ 
+    uri: process.env.NODE_ENV === "production" ? `${process.env.BASE_URL}/api/bgImageToken` : 'http://localhost:4000/api/bgImageToken', 
+    json: true 
+  }, (error, response, body) => {
     if (!error && response.statusCode === 200) {
       const token = body.token;
       const options = {
