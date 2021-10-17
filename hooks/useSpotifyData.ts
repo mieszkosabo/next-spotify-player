@@ -35,6 +35,6 @@ export const useSpotifyData = (accessToken: string | null, options: Options = { 
     isError: error,
     isNotPlaying: !isLoading && (data.data == null || data.data === ""),
     data: parseData(data),
-    artistImg
+    artistImg: artistImg?.bgUrl
   };
 };
