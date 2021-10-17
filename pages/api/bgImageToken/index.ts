@@ -7,7 +7,7 @@ import puppeteer from 'puppeteer';
 
 
 const handler = nc<NextApiRequest, NextApiResponse>();
-const REFRESH_TOKEN_RATE_IN_MINUTES = 10;
+const REFRESH_TOKEN_RATE_IN_MINUTES = 5;
 
 handler.get(async (req, res) => {
     // redis setup
